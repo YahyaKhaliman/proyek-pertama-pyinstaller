@@ -1,4 +1,3 @@
-pipeline {
 node {
 
     stage('Build') {
@@ -12,5 +11,3 @@ node {
     }
 
 }
-}
-
