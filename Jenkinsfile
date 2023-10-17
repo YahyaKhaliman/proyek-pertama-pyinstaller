@@ -1,17 +1,11 @@
 pipeline {
-    agent any
+    agent none
     stages {
         stage('Build') {
-            steps {
-                script {
-                    // Build with Docker
-                    docker.image('python:2-alpine').inside {
-                        sh 'python -m py_compile sources/add2vals.py sources/calc.py'
-                    }
+            docker.image('python:2-alpine').inside {
 
-                    // Build without Docker
-                    sh 'python -m py_compile sources/add2vals.py sources/calc.py'
-                }
+            sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+
             }
         }
     }
