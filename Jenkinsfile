@@ -2,11 +2,21 @@ pipeline {
     agent none
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'python:2-alpine'
+                }
+            }
             steps {
                 sh 'python -m py_compile sources/add2vals.py sources/calc.py'
             }
         }
         stage('Test') {
+            agent {
+                docker {
+                    image 'qnib/pytest'
+                }
+            }
             steps {
                 sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
             }
@@ -17,21 +27,21 @@ pipeline {
             }
         }
         stage('Deliver') {
-            agent {
-                docker {
-                    image 'cdrx/pyinstaller-linux:python2'
-                }
+            agent any
+            environment {
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
-                sh 'pyinstaller --onefile sources/add2vals.py'
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
+                }
             }
             post {
                 success {
-                    archiveArtifacts 'dist/add2vals'
-                }
-                failure {
-                    echo 'Failed to deliver the application. Notify the team or take appropriate actions.'
-                    // Di sini Anda dapat menambahkan tindakan-tindakan lain untuk menangani kegagalan
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
                 }
             }
         }
