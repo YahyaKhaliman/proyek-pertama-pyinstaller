@@ -1,5 +1,9 @@
 pipeline {
-    agent none
+    agent {
+                docker {
+                    image 'cdrx/pyinstaller-linux:python2'
+                }
+            }
     stages {
         stage('Build') {
             steps {
