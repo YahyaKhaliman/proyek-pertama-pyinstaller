@@ -9,6 +9,7 @@ pipeline {
             }
             steps {
                 sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+                stash(name: 'compiled-results', includes: 'sources/*.py*')
             }
         }
         stage('Test') {
@@ -28,14 +29,14 @@ pipeline {
         }
         stage('Deliver') {
             agent any
-            environment {
-                VOLUME = '$(pwd)/sources:/src'
-                IMAGE = 'cdrx/pyinstaller-linux:python2'
-            }
+                environment {
+                    VOLUME = '$(pwd)/sources:/src'
+                    IMAGE = 'cdrx/pyinstaller-linux:python2'
+                }
             steps {
                 dir(path: env.BUILD_ID) {
-                   sh "docker run --rm -i -v ${VOLUME} ${IMAGE} pyinstaller -F add2vals.py"
-
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
                 }
             }
             post {
