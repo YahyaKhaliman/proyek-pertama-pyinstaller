@@ -34,7 +34,8 @@ pipeline {
             }
             steps {
                 dir(path: env.BUILD_ID) {
-                   sh "docker run --rm -v ${VOLUME} ${IMAGE} -T pyinstaller -F add2vals.py"
+                   sh "docker run --rm -i -v ${VOLUME} ${IMAGE} pyinstaller -F add2vals.py"
+
                 }
             }
             post {
