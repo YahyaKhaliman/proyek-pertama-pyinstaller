@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-                docker {
-                    image 'cdrx/pyinstaller-linux:python2'
-                }
-            }
+    agent none
     stages {
         stage('Build') {
             steps {
@@ -35,6 +31,7 @@ pipeline {
                 }
                 failure {
                     echo 'Failed to deliver the application. Notify the team or take appropriate actions.'
+                    // Di sini Anda dapat menambahkan tindakan-tindakan lain untuk menangani kegagalan
                 }
             }
         }
