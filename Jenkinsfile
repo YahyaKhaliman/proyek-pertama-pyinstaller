@@ -1,46 +1,50 @@
-node {
-    stage('Build') {
-        try {
-            checkout scm
-            def pythonImage = docker.image('python:2-alpine')
-            pythonImage.inside {
-                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+pipeline {
+    agent none
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:2-alpine'
+                }
             }
-            stash name: 'compiled-results', includes: 'sources/*.py*'
-        } catch (Exception e) {
-            currentBuild.result = 'FAILURE'
-            error("${e}")
+            steps {
+                sh 'python -m py_compile sources/add2vals.py sources/calc.py'
+                stash(name: 'compiled-results', includes: 'sources/*.py*')
+            }
         }
-    }
-
-    stage('Test') {
-        try {
-            def pytestImage = docker.image('qnib/pytest')
-            pytestImage.inside {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'qnib/pytest'
+                }
+            }
+            steps {
                 sh 'py.test --verbose --junit-xml test-reports/results.xml sources/test_calc.py'
             }
-        } catch (Exception e) {
-            currentBuild.result = 'FAILURE'
-            error("${e}")
-        } finally {
-            junit 'test-reports/results.xml'
-        }
-    }
-
-    stage('Deliver') {
-        try {
-            def dockerImage = docker.image('cdrx/pyinstaller-linux:python2')
-            def volumePath = "${WORKSPACE}/sources:/src"
-            def buildPath = "${env.BUILD_ID}"
-            def command = "pyinstaller -F add2vals.py"
-            dockerImage.inside("-v ${volumePath} ${dockerImage} ${command}") {
-                sh "docker run --rm -v ${volumePath} ${dockerImage} ${command}"
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
             }
-            archiveArtifacts "${buildPath}/sources/dist/add2vals"
-            sh "docker run --rm -v ${volumePath} ${dockerImage} 'rm -rf build dist'"
-        } catch (Exception e) {
-            currentBuild.result = 'FAILURE'
-            error("${e}")
+        }
+        stage('Deliver') {
+            agent any
+                environment {
+                    VOLUME = '$(pwd)/sources:/src'
+                    IMAGE = 'cdrx/pyinstaller-linux:python2'
+                }
+            steps {
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                }
+            }
         }
     }
 }
