@@ -39,6 +39,10 @@ pipeline {
                 success {
                     archiveArtifacts 'dist/add2vals'
                 }
+                failure {
+                    echo 'Failed to deliver the application. Notify the team or take appropriate actions.'
+                    // Di sini Anda dapat menambahkan tindakan-tindakan lain untuk menangani kegagalan
+                }
             }
         }
     }
