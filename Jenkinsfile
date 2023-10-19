@@ -45,28 +45,22 @@ pipeline {
         //         }
         //     }
         // }
-       stage('Deliver') {
-            agent {
-                docker {
-                    image 'cdrx/pyinstaller-linux:python2'
-                }
+      stage('Deliver') {
+            agent any
+            environment {
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
-                // Restore the Python source code and compiled byte code files (with .pyc extension) from the previously saved stash.
-                unstash(name: 'compiled-results')
-
-                // Execute the pyinstaller command (in the PyInstaller container) on your simple Python application.
-                // This bundles your add2vals.py Python application into a single standalone executable file
-                // and outputs this file to the dist workspace directory (within the Jenkins home directory).
-                sh "pyinstaller --onefile sources/add2vals.py"
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} pyinstaller -F /src/add2vals.py"
+                }
             }
             post {
                 success {
-                    // Archive the standalone executable file and expose this file through the Jenkins interface.
-                    archiveArtifacts 'dist/add2vals'
-
-                    // Clean up the build and dist directories
-                    sh 'rm -rf build dist'
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} rm -rf build dist"
                 }
             }
         }
