@@ -53,6 +53,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'pip install Flask'  // Menginstal Flask
                 sh 'chmod +x ./jenkins/deliver.sh'
                 sh './jenkins/deliver.sh'
             }
