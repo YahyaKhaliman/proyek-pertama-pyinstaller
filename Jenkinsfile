@@ -48,7 +48,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'python /jenkins/app.py'
+                sh './jenkins/app.py'
             }
         }
     }
