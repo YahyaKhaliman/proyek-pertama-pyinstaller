@@ -55,7 +55,6 @@ pipeline {
             steps {
                 sh 'chmod +x ./jenkins/deliver.sh'
                 sh './jenkins/deliver.sh'
-                sh 'chmod +x ./sources/app.py'
             }
         }
     }
