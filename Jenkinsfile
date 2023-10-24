@@ -50,7 +50,7 @@ pipeline {
             agent any
             steps {
                 script {
-                    sh 'python /path/to/jenkins/app.py'
+                    sh 'python /jenkins/app.py'
                 }
                 input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)'
             }
