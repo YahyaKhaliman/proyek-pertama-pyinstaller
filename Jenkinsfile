@@ -46,11 +46,6 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            agent any
-            steps {
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'perintah-deploy-anda'" 
-            }
-        }
+        
     }
 }
