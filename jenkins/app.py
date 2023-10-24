@@ -3,7 +3,7 @@ import time
 
 # Build the Node.js/React application
 print("Building the Node.js/React application...")
-subprocess.run(["npm", "run", "build"], cwd="/var/jenkins_home/workspace/simple-node-js-react-app", shell=True)
+subprocess.call(["npm", "run", "build"], cwd="/var/jenkins_home/workspace/simple-node-js-react-app", shell=True)
 
 # Start the Node.js/React application in development mode
 print("Starting the Node.js/React application in development mode...")
