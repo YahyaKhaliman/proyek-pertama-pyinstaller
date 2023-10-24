@@ -1,9 +1,7 @@
 import subprocess
 import os
 
-subprocess.run(["python", "-m", "compileall", "sources/"])
-os.makedirs("build", exist_ok=True)
-
+# Run the Python application in development mode
 subprocess.Popen(["python", "app.py"])
 
 print("Now...")
