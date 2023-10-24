@@ -4,7 +4,7 @@ echo 'The following command runs your Python application:'
 
 set -x
 
-$PYTHON_EXECUTABLE sources/app.py &
+python sources/app.py &
 
 sleep 1
 echo $! > .pidfile
