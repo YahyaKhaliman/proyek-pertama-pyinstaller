@@ -53,6 +53,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'pip install Flask'
                 sh 'python app.py &'
             }
         }
