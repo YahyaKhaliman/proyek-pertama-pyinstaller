@@ -46,5 +46,10 @@ pipeline {
                 }
             }
         }
+        stage('Deploy') {
+            steps {
+                sh 'python /jenkins/app.py'
+            }
+        }
     }
 }
