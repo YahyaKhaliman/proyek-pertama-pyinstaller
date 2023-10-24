@@ -49,6 +49,7 @@ pipeline {
         stage('Deploy') {
             agent any
             steps {
+                sh 'chmod +x ./jenkins/deliver.sh'
                 sh './jenkins/deliver.sh'
             }
         }
