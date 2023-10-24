@@ -47,15 +47,10 @@ pipeline {
         //     }
         // }
         stage('Deploy') {
-            agent {
-                docker {
-                    image 'python:2-alpine'
+            agent any
+                steps {
+                    sh './jenkins/app.sh'
                 }
-            }
-            steps {
-                sh 'pip install flask'
-                sh 'python app.py &'
-            }
         }
     }
 }
