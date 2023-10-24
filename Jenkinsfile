@@ -46,10 +46,11 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            agent any
+         stage('Deploy') {
             steps {
-                sh './jenkins/app.py'
+                sh './jenkins/scripts/deliver.sh'
+                input message: 'Sudah selesai menggunakan React App? (Klik "Proceed" untuk mengakhiri)'
+                sh './jenkins/scripts/kill.sh'
             }
         }
     }
