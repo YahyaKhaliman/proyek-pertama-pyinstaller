@@ -47,10 +47,10 @@ pipeline {
         //     }
         // }
         stage('Deploy') {
-            agent any
-            steps {
+        agent any
+        steps {
             script {
-                    sh 'python /jenkins/app.py'
+                    sh 'python ./jenkins/app.py'
                 }
             }
         }
