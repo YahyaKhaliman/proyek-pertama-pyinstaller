@@ -49,7 +49,7 @@ pipeline {
         stage('Deploy') {
             agent any
             steps {
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'perintah-deploy-anda'" // Ganti 'perintah-deploy-anda' dengan perintah deploy yang sesuai
+                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'perintah-deploy-anda'" 
             }
         }
     }
