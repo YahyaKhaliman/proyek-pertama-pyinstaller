@@ -4,9 +4,6 @@ echo 'The following command runs your Python application:'
 
 set -x
 
-# Instal Flask di dalam kontainer
-pip install Flask
-
 # Jalankan aplikasi Python
 python sources/app.py &
 
