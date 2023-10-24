@@ -1,20 +1,10 @@
-import subprocess
-import time
+from flask import Flask
 
-# Build your Node.js/React application for production
-print("Building your Node.js/React application for production...")
-subprocess.call(["npm", "run", "build"])
+app = Flask(__name)
 
-# Run your Node.js/React application in development mode
-print("Running your Node.js/React application in development mode...")
-start_process = subprocess.Popen("npm start &", shell=True, preexec_fn=os.setsid)
+@app.route('/')
+def hello():
+    return "Submission CI/CD Dicoding 2023"
 
-# Wait for a moment to ensure the application is up and running
-time.sleep(1)
-
-# Write the process ID (PID) to a file
-with open(".pidfile", "w") as pidfile:
-    pidfile.write(str(start_process.pid))
-
-print("Now...")
-print("Visit http://localhost:3000 to see your Node.js/React application in action.")
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

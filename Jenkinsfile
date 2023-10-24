@@ -47,16 +47,13 @@ pipeline {
         //     }
         // }
         stage('Deploy') {
-        agent {
-            docker {
-                image 'python:2-alpine'
-            }
-        }
-        steps {
-            script {
-                sh 'python ./jenkins/app.py'
-
+            agent {
+                docker {
+                    image 'python:2-alpine'
                 }
+            }
+            steps {
+                sh 'python app.py &'
             }
         }
     }
