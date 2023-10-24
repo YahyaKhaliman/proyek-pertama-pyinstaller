@@ -49,9 +49,7 @@ pipeline {
         stage('Deploy') {
             agent any
             steps {
-                node {
                     sh 'python /jenkins/app.py'
-                }
             }
         }
     }
