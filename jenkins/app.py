@@ -1,10 +1,19 @@
-from flask import Flask
+import subprocess
+import time
 
-app = Flask(__name__)
+# Build the Node.js/React application
+print("Building the Node.js/React application...")
+subprocess.run(["npm", "run", "build"], cwd="/var/jenkins_home/workspace/simple-node-js-react-app")
 
-@app.route('/')
-def hello():
-    return "Submission CI/CD Dicoding 2023"
+# Start the Node.js/React application in development mode
+print("Starting the Node.js/React application in development mode...")
+process = subprocess.Popen(["npm", "start"], cwd="/var/jenkins_home/workspace/simple-node-js-react-app", stdout=subprocess.PIPE, stderr=subprocess.PIPE, preexec_fn=os.setsid)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+# Wait for a moment to ensure the application is up and running
+time.sleep(1)
+
+# Write the process ID (PID) to a file
+with open(".pidfile", "w") as pidfile:
+    pidfile.write(str(process.pid))
+
+print("The Node.js/React application is running. You can visit http://localhost:5000 to see it in action.")
