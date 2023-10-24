@@ -1,8 +1,10 @@
-import subprocess
-import os
+from flask import Flask
 
-# Run the Python application in development mode
-subprocess.Popen(["python", "app.py"])
+app = Flask(__name__)
 
-print("Now...")
-print("Visit http://localhost:5000 to see your Python application in action.")
+@app.route('/')
+def hello():
+    return "Submission CI/CD Dicoding 2023"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
