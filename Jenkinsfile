@@ -47,13 +47,8 @@ pipeline {
             }
         }
         stage('Deploy') {
-            agent any
             steps {
-                script{
-                sh 'apt-get update'
-                sh 'apt-get install -y python'
                 sh 'python /jenkins/app.py'
-                }
             }
         }
     }
