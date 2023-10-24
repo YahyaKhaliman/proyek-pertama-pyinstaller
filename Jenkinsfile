@@ -50,7 +50,7 @@ pipeline {
             agent any
             steps {
                 node {
-                    sh 'python /path/to/jenkins/app.py'
+                    sh 'python /jenkins/app.py'
                 }
             }
         }
