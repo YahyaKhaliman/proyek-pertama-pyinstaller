@@ -53,8 +53,18 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install --user cmake'
-                sh 'python ./sources/app.py'
+                script {
+                    // Buat virtual environment (venv)
+                    sh 'python -m venv venv'
+                    // Aktifkan venv
+                    sh 'source venv/bin/activate'
+                    // Upgrade pip
+                    sh 'pip install --upgrade pip'
+                    // Instal cmake
+                    sh 'pip install cmake'
+                    // Jalankan aplikasi Python Anda
+                    sh 'python ./sources/app.py'
+                }
             }
         }
     }
