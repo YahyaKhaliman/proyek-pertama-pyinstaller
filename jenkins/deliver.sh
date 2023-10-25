@@ -1,18 +1,21 @@
 #!/bin/sh
 
-echo 'The following command runs your Python application:'
-
+echo 'Menjalankan aplikasi Python Anda dengan Flask:'
 set -x
 
-# Instal Flask di dalam kontainer
+# Pastikan Anda memiliki Flask diinstal dalam environment Python Anda
 pip install Flask
 
-# Jalankan aplikasi Python
+# Jalankan aplikasi Python Anda
 python sources/app.py &
 
+# Tunggu sebentar untuk memastikan aplikasi selesai berjalan
 sleep 1
+
+# Simpan ID proses yang berjalan di dalam berkas .pidfile
 echo $! > .pidfile
+
 set +x
 
-echo 'Now...'
-echo 'Visit http://localhost:5000 to see your Python application in action.'
+echo 'Sekarang...'
+echo 'Kunjungi http://localhost:5000 untuk melihat aplikasi Python Anda beraksi.'
