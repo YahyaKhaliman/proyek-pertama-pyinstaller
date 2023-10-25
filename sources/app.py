@@ -1,11 +1,15 @@
-import http.server
+import streamlit as st
 
-def run_server():
-    # Buat server HTTP di port 5000
-    server_address = ('', 5000)
-    httpd = http.server.HTTPServer(server_address, http.server.SimpleHTTPRequestHandler)
-    print('Sedang menjalankan server...')
-    httpd.serve_forever()
+st.write("""
+SUBMISSION CI/CD DICODING 2023
+""")
 
-if __name__ == '__main__':
-    run_server()
+a = st.number_input("Masukkan Alas : ", 0)
+t = st.number_input("Masukkan Tinggi : ", 0)
+hitung = st.button("Hitung Luas")
+
+if hitung:
+    luas = 0.5 * a * t
+    st.success("Luas Segitiga adalah {luas}")
+    st.balloons()
+
