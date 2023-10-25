@@ -53,7 +53,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install cmake'
+                sh 'pip install --user cmake'
                 sh 'python ./sources/app.py'
             }
         }
