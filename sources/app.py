@@ -1,10 +1,11 @@
-from flask import Flask
+import http.server
 
-app = Flask(__name)
-
-@app.route('/')
-def hello():
-    return "Submission CI/CD Dicoding 2023 Yahya Khaliman Indrayana"
+def run_server():
+    # Buat server HTTP di port 5000
+    server_address = ('', 5000)
+    httpd = http.server.HTTPServer(server_address, http.server.SimpleHTTPRequestHandler)
+    print('Sedang menjalankan server...')
+    httpd.serve_forever()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    run_server()
