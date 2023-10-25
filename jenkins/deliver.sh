@@ -1,21 +1,11 @@
 #!/bin/sh
 
-echo 'Menjalankan aplikasi Python Anda dengan Flask:'
-set -x
+echo 'Menjalankan aplikasi Python di port 5000...'
 
-# Pastikan Anda memiliki Flask diinstal dalam environment Python Anda
-pip install Flask
-
-# Jalankan aplikasi Python Anda
+# Menjalankan aplikasi Python di latar belakang
 python sources/app.py &
 
-# Tunggu sebentar untuk memastikan aplikasi selesai berjalan
-sleep 1
-
-# Simpan ID proses yang berjalan di dalam berkas .pidfile
+# Menyimpan ID proses ke dalam file .pidfile
 echo $! > .pidfile
 
-set +x
-
-echo 'Sekarang...'
-echo 'Kunjungi http://localhost:5000 untuk melihat aplikasi Python Anda beraksi.'
+echo 'Aplikasi sekarang berjalan. Kunjungi http://localhost:5000 untuk melihatnya.'
