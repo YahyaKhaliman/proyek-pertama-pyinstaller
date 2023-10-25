@@ -53,8 +53,8 @@ pipeline {
                 }
             }
             steps {
-                sh 'chmod +x ./jenkins/deliver.sh'
-                sh './jenkins/deliver.sh'
+                sh 'pip install streamlit'
+                sh 'python ./sources/app.py'
             }
         }
     }
