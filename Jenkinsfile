@@ -29,20 +29,34 @@ pipeline {
         }
         stage('Deliver') {
             agent any
-                environment {
-                    VOLUME = '$(pwd)/sources:/src'
-                    IMAGE = 'cdrx/pyinstaller-linux:python2'
-                }
+            environment {
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python2'
+            }
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
                 }
+                post {
+                    success {
+                        archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                        sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                    }
+                }
             }
-            post {
-                success {
-                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+        }
+        stage('Manual Approval') {
+            steps {
+                script {
+                    def userInput = input(
+                        message: 'Lanjutkan ke tahap Deploy?',
+                        ok: 'Proceed',
+                        parameters: [choice(choices: ['Proceed', 'Abort'], description: 'Pilih tindakan', name: 'ACTION')]
+                    )
+                    if (userInput == 'Abort') {
+                        error 'Pipeline dihentikan oleh pengguna'
+                    }
                 }
             }
         }
@@ -58,9 +72,8 @@ pipeline {
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
                 }
                 script {
-                    // Menjeda eksekusi pipeline selama 1 menit (60 detik)
-                    echo 'Menjeda eksekusi pipeline selama 1 menit...'
-                    sleep time: 60, unit: 'SECONDS'
+                    echo 'Menjeda eksekusi pipeline selama 5 detik...'
+                    sleep time: 5, unit: 'SECONDS'
                 }
             }
             post {
