@@ -46,16 +46,18 @@ pipeline {
                 }
             }
         }
-         stage('Manual Approval') {
+        stage('Manual Approval') {
             steps {
                 script {
                     def userInput = input(
-                        message: 'Lanjutkan ke tahap Deploy?',
-                        ok: 'Proceed',
-                        parameters: [choice(choices: ['Proceed', 'Abort'], description: 'Pilih tindakan', name: 'ACTION')]
-                    )
-                    if (userInput == 'Abort') {
-                        error 'Pipeline dihentikan oleh pengguna'
+                        message: 'Apakah Anda ingin melanjutkan tahap Deploy? Ketik "proceed" untuk melanjutkan atau "abort" untuk menghentikan:',
+                        ok: 'proceed',
+                        submitter: 'user',
+                        parameters: [string(defaultValue: 'proceed', description: '', name: 'ACTION')]
+                    }
+                    if (userInput != 'proceed') {
+                        currentBuild.result = 'ABORTED'
+                        error('Pipeline dihentikan oleh pengguna')
                     }
                 }
             }
