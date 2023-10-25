@@ -54,7 +54,7 @@ pipeline {
                         ok: 'proceed',
                         submitter: 'user',
                         parameters: [string(defaultValue: 'proceed', description: '', name: 'ACTION')]
-                    }
+                    )
                     if (userInput != 'proceed') {
                         currentBuild.result = 'ABORTED'
                         error('Pipeline dihentikan oleh pengguna')
