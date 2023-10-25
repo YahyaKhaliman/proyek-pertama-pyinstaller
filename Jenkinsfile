@@ -52,7 +52,7 @@ pipeline {
                     def UInput = input(
                         message: 'Apakah Anda ingin melanjutkan tahap Deploy?',
                         ok: 'Process',
-                        parameters: [string(description: 'Ketik "Process" untuk melanjutkan atau "Abort" untuk menghentikan:', name: 'ACTION')]
+                        parameters: [(description: 'Ketik "Process" untuk melanjutkan atau "Abort" untuk menghentikan:', name: 'ACTION')]
                     )
                     if (UInput != 'Process') {
                         error('Pipeline dihentikan oleh pengguna')
