@@ -69,8 +69,8 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Tunggu 5 detik untuk deploy...'
-                    sleep time: 5, unit: 'SECONDS'
+                    echo 'Tunggu 10 detik untuk deploy...'
+                    sleep time: 10, unit: 'SECONDS'
                 }
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
