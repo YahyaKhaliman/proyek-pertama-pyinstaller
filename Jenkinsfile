@@ -49,12 +49,12 @@ pipeline {
         stage('Manual Approval') {
             steps {
                 script {
-                    def userInput = input(
+                    def UInput = input(
                         message: 'Apakah Anda ingin melanjutkan tahap Deploy?',
                         ok: 'Process',
-                        parameters: [choice(choices: ['Process', 'Abort'])]
+                        parameters: [choice(choices: ['Process', 'Abort'], description: '',name:'ACTION')]
                     )
-                    if (userInput != 'Process') {
+                    if (UInput != 'Process') {
                         currentBuild.result = 'ABORTED'
                         error('Pipeline dihentikan oleh pengguna')
                     }
