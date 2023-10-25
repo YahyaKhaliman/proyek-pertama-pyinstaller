@@ -51,10 +51,10 @@ pipeline {
                 script {
                     def userInput = input(
                         message: 'Apakah Anda ingin melanjutkan tahap Deploy?',
-                        ok: 'Proccess',
-                        parameters: [choice(choices: ['Proccess', 'Abort'])]
+                        ok: 'Process',
+                        parameters: [choice(choices: ['Process', 'Abort'])]
                     )
-                    if (userInput != 'Proccess') {
+                    if (userInput != 'Process') {
                         currentBuild.result = 'ABORTED'
                         error('Pipeline dihentikan oleh pengguna')
                     }
