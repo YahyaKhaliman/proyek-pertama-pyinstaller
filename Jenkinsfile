@@ -69,17 +69,18 @@ pipeline {
                 IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
-                dir(path: env.BUILD_ID) {
-                    unstash(name: 'compiled-results')
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
-                }
                 script {
                     echo 'Menjeda eksekusi pipeline selama 5 detik...'
                     sleep time: 5, unit: 'SECONDS'
                 }
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
+                }
             }
             post {
                 success {
+                    echo 'Selamat Deploy Berhasil'
                     archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
                 }
