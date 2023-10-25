@@ -50,12 +50,11 @@ pipeline {
             steps {
                 script {
                     def userInput = input(
-                        message: 'Apakah Anda ingin melanjutkan tahap Deploy? Ketik "proceed" untuk melanjutkan atau "abort" untuk menghentikan:',
-                        ok: 'proceed',
-                        submitter: 'user',
-                        parameters: [string(defaultValue: 'proceed', description: '', name: 'ACTION')]
+                        message: 'Apakah Anda ingin melanjutkan tahap Deploy?',
+                        ok: 'Proccess',
+                        parameters: [choice(choices: ['Proccess', 'Abort'], description: 'Pilih tindakan', name: 'ACTION')]
                     )
-                    if (userInput != 'proceed') {
+                    if (userInput != 'Proccess') {
                         currentBuild.result = 'ABORTED'
                         error('Pipeline dihentikan oleh pengguna')
                     }
@@ -70,7 +69,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo 'Menjeda eksekusi pipeline selama 5 detik...'
+                    echo 'Tunggu 5 detik untuk deploy...'
                     sleep time: 5, unit: 'SECONDS'
                 }
                 dir(path: env.BUILD_ID) {
@@ -80,9 +79,9 @@ pipeline {
             }
             post {
                 success {
-                    echo 'Selamat Deploy Berhasil'
                     archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                    echo 'Selamat Deploy Berhasil'
                 }
             }
         }
