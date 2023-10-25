@@ -53,7 +53,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'pip install streamlit'
+                sh 'pip install cmake'
                 sh 'python ./sources/app.py'
             }
         }
