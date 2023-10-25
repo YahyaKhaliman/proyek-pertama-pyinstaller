@@ -27,38 +27,46 @@ pipeline {
                 }
             }
         }
-        // stage('Deliver') {
-        //     agent any
-        //         environment {
-        //             VOLUME = '$(pwd)/sources:/src'
-        //             IMAGE = 'cdrx/pyinstaller-linux:python2'
-        //         }
-        //     steps {
-        //         dir(path: env.BUILD_ID) {
-        //             unstash(name: 'compiled-results')
-        //             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
-        //         }
-        //     }
-        //     post {
-        //         success {
-        //             archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
-        //             sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
-        //         }
-        //     }
-        // }
-        stage('Deploy') {
-            agent {
-                docker {
-                    image 'python:3-alpine'
+        stage('Deliver') {
+            agent any
+                environment {
+                    VOLUME = '$(pwd)/sources:/src'
+                    IMAGE = 'cdrx/pyinstaller-linux:python2'
+                }
+            steps {
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
                 }
             }
+            post {
+                success {
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
+                }
+            }
+        }
+        stage('Deploy') {
+            agent any
+            environment {
+                VOLUME = '$(pwd)/sources:/src'
+                IMAGE = 'cdrx/pyinstaller-linux:python2'
+            }
             steps {
+                dir(path: env.BUILD_ID) {
+                    unstash(name: 'compiled-results')
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
+                }
                 script {
-                    sh 'python -m pip install --upgrade pip'
-                    // Instal cmake
-                    sh 'pip install --user cmake'
-                    // Jalankan aplikasi Python Anda
-                    sh 'python ./sources/app.py'
+                    // Menjeda eksekusi pipeline selama 1 menit (60 detik)
+                    echo 'Menjeda eksekusi pipeline selama 1 menit...'
+                    sleep time: 60, unit: 'SECONDS'
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'rm -rf build dist'"
                 }
             }
         }
